@@ -1,0 +1,208 @@
+notification-service/
+│
+├── 📦 Configuration Files
+│   ├── package.json                 # Project dependencies and scripts
+│   ├── tsconfig.json                # TypeScript configuration
+│   ├── jest.config.js               # Jest testing configuration
+│   ├── jest.integration.config.js   # Integration test config
+│   ├── .eslintrc.json               # ESLint rules
+│   ├── .prettierrc.json             # Prettier formatting rules
+│   ├── .env.example                 # Environment variables template
+│   ├── .gitignore                   # Git ignore rules
+│   └── .dockerignore                # Docker ignore rules
+│
+├── 🐳 Docker & Infrastructure
+│   ├── Dockerfile                   # Production Docker image
+│   ├── docker-compose.yml           # Local development setup
+│   └── prometheus.yml               # Prometheus configuration
+│
+├── 📚 Documentation
+│   ├── README.md                    # Main documentation
+│   ├── QUICKSTART.md                # 5-minute setup guide
+│   ├── API.md                       # API documentation
+│   ├── ARCHITECTURE.md              # Architecture deep-dive
+│   ├── CONTRIBUTING.md              # Contribution guidelines
+│   ├── PROJECT_SUMMARY.md           # Project overview
+│   └── PROJECT_STRUCTURE.txt        # This file
+│
+├── 🔧 Build Tools
+│   └── Makefile                     # Build automation commands
+│
+├── 🗄️ Database (Prisma)
+│   └── prisma/
+│       ├── schema.prisma            # Database schema definition
+│       └── migrations/
+│           ├── migration_lock.toml  # Migration lock file
+│           └── 20240101000000_init/
+│               └── migration.sql    # Initial database migration
+│
+└── 💻 Source Code (src/)
+    │
+    ├── 📱 Entry Point
+    │   └── index.ts                 # Application entry point
+    │
+    ├── 🚀 Application Bootstrap
+    │   ├── app.ts                   # Main application class
+    │   └── config/
+    │       └── config.ts            # Configuration management
+    │
+    ├── 🎯 Domain Layer (Core Business Logic)
+    │   └── domain/
+    │       ├── entities/
+    │       │   └── Notification.ts  # Core notification entity
+    │       └── interfaces/
+    │           ├── INotificationProvider.ts    # Provider contract
+    │           ├── INotificationRepository.ts  # Repository contract
+    │           ├── IMessageQueue.ts            # Message queue contract
+    │           └── ILogger.ts                  # Logger contract
+    │
+    ├── 📋 Application Layer (Use Cases)
+    │   └── application/
+    │       ├── services/
+    │       │   └── NotificationService.ts      # Core business logic
+    │       └── dto/
+    │           └── NotificationDTO.ts          # Data transfer objects
+    │
+    ├── 🔌 Infrastructure Layer (Implementations)
+    │   └── infrastructure/
+    │       ├── database/
+    │       │   └── NotificationRepository.ts   # Prisma repository
+    │       ├── messaging/
+    │       │   ├── KafkaConsumer.ts            # Kafka integration
+    │       │   └── RabbitMQClient.ts           # RabbitMQ integration
+    │       ├── providers/
+    │       │   ├── SendGridProvider.ts         # Email provider
+    │       │   ├── FCMProvider.ts              # Push provider
+    │       │   └── WebSocketProvider.ts        # WebSocket provider
+    │       └── logging/
+    │           └── Logger.ts                   # Pino logger
+    │
+    ├── 🌐 API Layer (Presentation)
+    │   └── api/
+    │       ├── controllers/
+    │       │   └── NotificationController.ts   # API controllers
+    │       ├── routes/
+    │       │   ├── notificationRoutes.ts       # Notification endpoints
+    │       │   ├── healthRoutes.ts             # Health check endpoints
+    │       │   └── metricsRoutes.ts            # Metrics endpoints
+    │       └── middleware/
+    │           ├── validation.ts               # Request validation
+    │           └── errorHandler.ts             # Global error handler
+    │
+    └── 🧪 Tests
+        └── __tests__/
+            ├── setup.ts                        # Test configuration
+            ├── unit/
+            │   ├── Notification.test.ts        # Entity tests
+            │   └── NotificationService.test.ts # Service tests
+            └── integration/
+                └── api.test.ts                 # API integration tests
+
+═══════════════════════════════════════════════════════════════════════════
+
+📊 STATISTICS
+
+Total Files:              47
+Source Code Files:        21
+Test Files:               4
+Configuration Files:      8
+Documentation Files:      7
+Database Files:           3
+Docker Files:             3
+
+═══════════════════════════════════════════════════════════════════════════
+
+🏗️ ARCHITECTURE LAYERS
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      PRESENTATION LAYER                         │
+│  Controllers, Routes, Middleware (API Layer)                    │
+│  - NotificationController                                       │
+│  - Health & Metrics Routes                                      │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                      APPLICATION LAYER                          │
+│  Services, Use Cases, DTOs                                      │
+│  - NotificationService                                          │
+│  - NotificationDTO                                              │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                       DOMAIN LAYER                              │
+│  Entities, Interfaces (Core Business Logic)                     │
+│  - Notification Entity                                          │
+│  - INotificationProvider, IRepository, etc.                     │
+└────────────────────────────┬────────────────────────────────────┘
+                             ↑
+                             │
+┌─────────────────────────────────────────────────────────────────┐
+│                    INFRASTRUCTURE LAYER                         │
+│  External Integrations & Implementations                        │
+│  - Repositories (Prisma)                                        │
+│  - Providers (SendGrid, FCM, WebSocket)                         │
+│  - Messaging (Kafka, RabbitMQ)                                  │
+│  - Logging (Pino)                                               │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔑 KEY FILES BY PURPOSE
+
+CONFIGURATION
+  package.json              Dependencies and scripts
+  tsconfig.json             TypeScript compiler settings
+  .env.example              Environment variables template
+
+DOCKER
+  Dockerfile                Production container
+  docker-compose.yml        Local development stack
+
+DATABASE
+  prisma/schema.prisma      Database schema
+  prisma/migrations/        Database migrations
+
+CORE BUSINESS LOGIC
+  src/domain/entities/Notification.ts           Notification entity
+  src/application/services/NotificationService.ts  Business logic
+
+API
+  src/api/controllers/NotificationController.ts  HTTP handlers
+  src/api/routes/notificationRoutes.ts          Route definitions
+
+PROVIDERS
+  src/infrastructure/providers/SendGridProvider.ts    Email
+  src/infrastructure/providers/FCMProvider.ts         Push
+  src/infrastructure/providers/WebSocketProvider.ts   WebSocket
+
+MESSAGE QUEUES
+  src/infrastructure/messaging/KafkaConsumer.ts      Kafka
+  src/infrastructure/messaging/RabbitMQClient.ts     RabbitMQ
+
+TESTING
+  src/__tests__/unit/                Unit tests
+  src/__tests__/integration/         Integration tests
+
+DOCUMENTATION
+  README.md                 Complete guide
+  QUICKSTART.md             Quick setup
+  API.md                    API reference
+  ARCHITECTURE.md           Architecture details
+
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 QUICK COMMANDS
+
+Setup:         make setup           OR  npm install && docker-compose up -d
+Development:   make dev             OR  npm run dev
+Build:         make build           OR  npm run build
+Test:          make test            OR  npm test
+Lint:          make lint            OR  npm run lint:fix
+Database:      make migrate         OR  npm run migrate:dev
+
+Docker:        make docker-up       Start all services
+               make docker-down     Stop all services
+
+═══════════════════════════════════════════════════════════════════════════

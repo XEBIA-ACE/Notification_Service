@@ -1,0 +1,100 @@
+// Prisma schema for notification service
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  channel       Channel
+  type          String
+  subject       String?
+  content       String
+  metadata      Json?
+  status        NotificationStatus @default(PENDING)
+  priority      Priority @default(NORMAL)
+  scheduledAt   DateTime? @map("scheduled_at")
+  sentAt        DateTime? @map("sent_at")
+  deliveredAt   DateTime? @map("delivered_at")
+  failedAt      DateTime? @map("failed_at")
+  errorMessage  String?   @map("error_message")
+  retryCount    Int       @default(0) @map("retry_count")
+  externalId    String?   @map("external_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([status])
+  @@index([channel])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model NotificationTemplate {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  channel     Channel
+  subject     String?
+  content     String
+  variables   Json?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("notification_templates")
+}
+
+model NotificationPreference {
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  email       Boolean  @default(true)
+  push        Boolean  @default(true)
+  websocket   Boolean  @default(true)
+  sms         Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("notification_preferences")
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  notificationId String  @map("notification_id")
+  action        String
+  status        String
+  details       Json?
+  timestamp     DateTime @default(now())
+
+  @@index([notificationId])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+enum Channel {
+  EMAIL
+  PUSH
+  WEBSOCKET
+  SMS
+}
+
+enum NotificationStatus {
+  PENDING
+  PROCESSING
+  SENT
+  DELIVERED
+  FAILED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
