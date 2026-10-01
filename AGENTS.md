@@ -5,24 +5,26 @@
 - **Service:** Notification Service
 - **Type:** integration
 - **Technologies:**
-- Python with Celery (async task processing) or Node.js with BullMQ
-- Apache Kafka / RabbitMQ consumer (AMQP / Kafka Consumer Group)
-- SendGrid REST API / AWS SES SDK (email delivery)
-- Twilio REST API / AWS SNS SDK (SMS delivery)
+- Node.js / NestJS (TypeScript) or Python
+- Apache Kafka consumer (consumer group, DLQ handling)
+- Twilio SMS API / AWS SNS (SMS delivery)
+- SendGrid API / AWS SES (email delivery)
 - Handlebars / Jinja2 (notification templates)
-- Docker + Kubernetes (horizontal scaling based on queue depth / HPA)
-- OpenTelemetry SDK for tracing and metrics
-- AWS Secrets Manager / HashiCorp Vault for provider API key retrieval
+- Resilience4j / opossum (circuit breaker, retry with exponential backoff)
+- HashiCorp Vault / AWS Secrets Manager (API key management)
+- OpenTelemetry (distributed tracing, correlation ID propagation)
+- Docker / Kubernetes (HPA, consumer group scaling)
 - **Responsibilities:**
-- Consume UserRegistered, OTPRequested, and UserVerified events from the Event Bus (Kafka/RabbitMQ) with idempotency key handling for at-least-once delivery safety
-- Dispatch email verification links and welcome emails to newly registered users via the email provider (SendGrid / AWS SES)
-- Send SMS OTP codes to mobile numbers in E.164 format via the SMS gateway (Twilio / AWS SNS)
-- Manage notification templates (Handlebars / Jinja2) and support localization/i18n
-- Track delivery status via provider webhooks (delivered, bounced, failed) and trigger retries for transient failures
-- Respect user communication preferences and opt-out/suppression lists
-- Ensure OTP values are never logged in plaintext after dispatch
-- Handle Dead Letter Queue (DLQ) events with alerting for undeliverable notifications
-- Retrieve provider API keys from Secrets Manager at runtime
+- Consume UserRegistered, OTPRequested, and AccountVerified domain events from Kafka consumer group
+- Dispatch OTP codes via SMS gateway (Twilio / AWS SNS) for mobile registration flows
+- Send email verification link emails via email provider (SendGrid / AWS SES) for email registration flows
+- Send welcome emails upon AccountVerified event
+- Manage notification templates with localization support (Handlebars / Jinja2)
+- Implement idempotent event processing to handle Kafka at-least-once delivery safely
+- Apply circuit breakers (Resilience4j) around SMS gateway and email provider calls
+- Handle delivery retries with exponential backoff and route unrecoverable failures to Dead Letter Queue
+- Track and log notification delivery status (delivered, failed, bounced) — masking OTP values and PII in logs
+- Retrieve API keys for external providers from secrets manager (Vault / AWS Secrets Manager)
 
 ## General Rules
 
